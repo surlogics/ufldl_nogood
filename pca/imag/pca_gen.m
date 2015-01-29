@@ -26,11 +26,19 @@ x = x - repmat(avg,size(x,1),1);
 % -------------------- YOUR CODE HERE -------------------- 
 xRot = zeros(size(x)); % You need to compute this
 m = size(x,2);
-sigma = (x*x')./m;
-[U,S,V] = svd(sigma);
-u = U;
-xRot = u'*x;
 
+
+%VERSION1:
+% sigma = (x*x')./m;
+% [U,S,V] = svd(sigma);
+% u = U;
+% xRot = u*x;
+
+%VERSION2:
+[u score S] = princomp(x');
+U=u;
+S=diag(S);
+xRot = u'*x;
 %%================================================================
 %% Step 1b: Check your implementation of PCA
 %  The covariance matrix for the data expressed with respect to the basis U

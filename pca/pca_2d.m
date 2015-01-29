@@ -24,10 +24,28 @@ avg = mean(x,2);
 x = x - repmat(avg,1,size(x,2));  %let it zero-meaned
 m = size(x,2);
 sigma = (x*x')./m;
-%[Q,D] = eig(sigma);
-%u = Q;
+
+
+%%ALTERNATIVE1:THIS IS OK
+[Q,D] = eig(sigma);
+[lambda, ind] = sort(diag(D), 'descend');
+Q = Q(:,ind(1:2));
+lambda = lambda(1:2);
+u = Q;
+
+%%ALTERNATIVE TO THE CODE ABOVE
 [U,S,V] = svd(sigma);
 u = U;
+
+
+
+%%THIRD EDITON:
+[u score S] = princomp(x');
+S =diag(S);
+
+
+
+
 % -------------------------------------------------------- 
 hold on
 plot([0 u(1,1)], [0 u(2,1)]);
@@ -78,7 +96,7 @@ epsilon = 1e-5;
 % -------------------- YOUR CODE HERE -------------------- 
 xPCAWhite = zeros(size(x)); % You need to compute this
 xPCAWhite = u' * x;
-xPCAWhite = diag(1./sqrt(diag(S)+epsilon)) * xPCAWhite ;
+xPCAWhite = diag(1./sqrt(diag(S)+0)) * xPCAWhite ;
 
 
 % -------------------------------------------------------- 
