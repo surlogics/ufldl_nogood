@@ -1,10 +1,16 @@
 %% CS294A/CS294W Self-taught Learning Exercise
 
 
-
+%20150129
 %%NOT GOOD,Train Accuracy: 99.763593%;;Test Accuracy: 97.896825%
 
 
+%20150130
+%Changed zca2 to sigma version,best accuracy
+%Train Accuracy: 100.000000%
+%Test Accuracy: 98.214286%
+%~~~added grad_check,
+%Still may something wrong with RICA gradient
 
 %  Instructions
 %  ------------
@@ -91,6 +97,9 @@ options.MaxIter = 1000;
 m = sqrt(sum(patches.^2) + (1e-8));
 x = bsxfunwrap(@rdivide,patches,m);
 [opttheta, cost, exitflag] = minFunc( @(theta) softICACost(theta, x, params), randTheta, options); % Use x or xw
+%Check whether the grad is correct
+av = grad_check( @(theta) softICACost(theta, x, params), randTheta,10);
+
 
 %  Find opttheta by running the RICA on all the training patches.
 %  You will need to whitened the patches with the zca2 function 
@@ -144,7 +153,12 @@ options.MaxIter = 300;
 
 % optimize
 %%% YOUR CODE HERE %%%
+addpath('./minFunc');%USE minFunc in the subfolder
+theta=zeros(featureSize,numClasses);
 theta(:)=minFunc( @(theta) softmax_regression_vec(theta, trainFeatures,trainLabels), randTheta2, options);
+%Check numerical gradient
+av=grad_check( @(theta) softmax_regression_vec(theta, trainFeatures,trainLabels), randTheta2,10);
+
 % theta(:)=minFunc(@softmax_regression_vec( randTheta2, options, trainFeatures, trainLabels);
 
 %%======================================================================
